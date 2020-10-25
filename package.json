@@ -1,0 +1,21 @@
+{
+  "name": "eripusisu",
+  "version": "0.0.0",
+  "description": "Text truncation library",
+  "main": "dist/index.js",
+  "scripts": {},
+  "keywords": [
+    "text",
+    "truncate",
+    "ellipsis",
+    "line",
+    "range",
+    "float",
+    "inline-block"
+  ],
+  "author": "Takayuki Shimada",
+  "license": "MIT",
+  "devDependencies": {
+    "prettier": "^2.1.2"
+  }
+}
