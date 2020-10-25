@@ -11,4 +11,4 @@
 
 ## 
 
-[Examples](examples/index.html)
+[Examples](https://tsmd.github.io/eripusisu/examples.html)
