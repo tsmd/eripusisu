@@ -22,6 +22,7 @@ export default class Eripusisu {
   private rects: EripusisuRectWithIndex[] = [];
   private rectsMemo: number[] = [];
   private expanded = true;
+  private rtl = false;
 
   constructor(
     private container: HTMLElement,
@@ -30,6 +31,8 @@ export default class Eripusisu {
   ) {
     this.expanded = options.expanded ?? false;
     options.ellipsisText = options.ellipsisText ?? "…";
+
+    this.rtl = getComputedStyle(this.container).direction === "rtl";
 
     this.handleClick = this.handleClick.bind(this);
 
@@ -106,15 +109,19 @@ export default class Eripusisu {
     this.linesMemo = [];
 
     let currentLine = 0;
-    const rectTraverser = new RectTraverser((rect, index, lineCount) => {
-      if (currentLine < lineCount) {
-        currentLine = lineCount;
-        this.linesMemo.push(index);
-      }
-      if (lineCount > this.lines + 1) {
-        return true;
-      }
-    });
+    const rectTraverser = new RectTraverser(
+      (rect, index, lineCount) => {
+        if (currentLine < lineCount) {
+          currentLine = lineCount;
+          this.linesMemo.push(index);
+        }
+        if (lineCount > this.lines + 1) {
+          return true;
+        }
+      },
+      [],
+      this.rtl
+    );
 
     for (let i = 0; i < this.targetNodes.length; i += 1) {
       const node = this.targetNodes[i];
@@ -159,12 +166,16 @@ export default class Eripusisu {
 
   private isRectsWithinLines(rects, lines) {
     let flag = true;
-    new RectTraverser((rect, index, lineCount) => {
-      if (lines < lineCount) {
-        flag = false;
-        return false;
-      }
-    }, rects);
+    new RectTraverser(
+      (rect, index, lineCount) => {
+        if (lines < lineCount) {
+          flag = false;
+          return false;
+        }
+      },
+      rects,
+      this.rtl
+    );
     return flag;
   }
 
@@ -313,14 +324,14 @@ export default class Eripusisu {
 
 class RectTraverser {
   private lineCount = 0;
-  private lastTop = -Infinity;
-  private lastRight = Infinity;
+  private lastBlockStart = -Infinity;
+  private lastInlineEnd = this.rtl ? -Infinity : Infinity;
 
-  /**
-   * @param {Function} callback
-   * @param {DOMRect[]} rects
-   */
-  constructor(private callback, private rects = []) {
+  constructor(
+    private callback: Function,
+    private rects: EripusisuRect[] = [],
+    private rtl = false
+  ) {
     for (let i = 0; i < rects.length; i += 1) {
       const rect = rects[i];
       const result = this.process(rect, i);
@@ -337,11 +348,16 @@ class RectTraverser {
 
   process(rect, i) {
     // 改行があったとみなす条件
-    if (this.lastTop + 10 < rect.top && this.lastRight > rect.left) {
+    if (
+      this.lastBlockStart + 10 < rect.top &&
+      (this.rtl
+        ? this.lastInlineEnd < rect.right
+        : this.lastInlineEnd > rect.left)
+    ) {
       this.lineCount += 1;
     }
-    this.lastTop = rect.top;
-    this.lastRight = rect.right;
+    this.lastBlockStart = rect.top;
+    this.lastInlineEnd = this.rtl ? rect.left : rect.right;
 
     return this.callback(rect, i, this.lineCount);
   }
