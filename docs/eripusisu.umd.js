@@ -31,7 +31,7 @@
         function Eripusisu(container, lines, options) {
             if (lines === void 0) { lines = 3; }
             if (options === void 0) { options = {}; }
-            var _a;
+            var _a, _b;
             this.container = container;
             this.lines = lines;
             this.options = options;
@@ -40,10 +40,13 @@
             this.linesMemo = [];
             this.rects = [];
             this.rectsMemo = [];
-            this.expanded = false;
-            this.isDirty = false;
-            options.ellipsisText = (_a = options.ellipsisText) !== null && _a !== void 0 ? _a : "…";
+            this.expanded = true;
+            this.expanded = (_a = options.expanded) !== null && _a !== void 0 ? _a : false;
+            options.ellipsisText = (_b = options.ellipsisText) !== null && _b !== void 0 ? _b : "…";
+            this.handleClick = this.handleClick.bind(this);
             this.prepareAttributes();
+            this.bindEvents();
+            this.rebuild();
             this.refresh();
         }
         Eripusisu.prototype.prepareAttributes = function () {
@@ -53,39 +56,33 @@
             (_a = this.options.toggleButton) === null || _a === void 0 ? void 0 : _a.setAttribute("aria-controls", randomId);
             this.updateAttributes();
         };
+        Eripusisu.prototype.bindEvents = function () {
+            var _a;
+            (_a = this.options.toggleButton) === null || _a === void 0 ? void 0 : _a.addEventListener("click", this.handleClick);
+        };
+        Eripusisu.prototype.unbindEvents = function () {
+            var _a;
+            (_a = this.options.toggleButton) === null || _a === void 0 ? void 0 : _a.removeEventListener("click", this.handleClick);
+        };
+        Eripusisu.prototype.handleClick = function (e) {
+            e.preventDefault();
+            this.toggle();
+        };
         Eripusisu.prototype.updateAttributes = function () {
             var _a;
             (_a = this.options.toggleButton) === null || _a === void 0 ? void 0 : _a.setAttribute("aria-expanded", String(this.expanded));
-        };
-        Eripusisu.prototype.refresh = function () {
-            this.revertToOriginalNodes();
-            var childNodes = this.container.childNodes;
-            this.originalNodes = document.createDocumentFragment();
-            for (var i = 0; i < childNodes.length; i += 1) {
-                this.originalNodes.appendChild(childNodes[i].cloneNode(true));
-            }
-            this.targetNodes = this.collectTargetNodes();
-            this.prepareRects();
-            if (this.linesMemo.length > this.lines) {
-                this.truncate();
-            }
-        };
-        Eripusisu.prototype.collectTargetNodes = function () {
-            return collectNodes(this.container, function (node) {
-                return ((node instanceof HTMLElement &&
-                    ["IMG", "PICTURE", "SVG"].indexOf(node.tagName) >= 0) ||
-                    (node instanceof Text && node.textContent.trim() !== ""));
-            });
         };
         Eripusisu.prototype.emptyTarget = function () {
             this.container.innerHTML = "";
         };
         Eripusisu.prototype.revertToOriginalNodes = function () {
-            if (this.isDirty) {
-                this.emptyTarget();
-                this.container.appendChild(this.originalNodes.cloneNode(true));
-                this.isDirty = false;
-            }
+            this.emptyTarget();
+            this.container.appendChild(this.originalNodes.cloneNode(true));
+            this.targetNodes = collectNodes(this.container, function (node) {
+                return ((node instanceof HTMLElement &&
+                    ["IMG", "PICTURE", "SVG"].indexOf(node.tagName) >= 0) ||
+                    (node instanceof Text && node.textContent.trim() !== ""));
+            });
         };
         Eripusisu.prototype.prepareRects = function () {
             var _this = this;
@@ -148,7 +145,9 @@
         };
         Eripusisu.prototype.truncate = function () {
             var _this = this;
-            this.isDirty = true;
+            if (this.linesMemo.length <= this.lines) {
+                return;
+            }
             // 試行中のパフォーマンス向上
             // @ts-ignore
             this.container.style.contain = "strict";
@@ -224,15 +223,41 @@
             this.container.appendChild(resultContents);
             teardown();
         };
-        Eripusisu.prototype.toggle = function () {
-            this.expanded = !this.expanded;
+        Eripusisu.prototype.rebuild = function () {
+            this.originalNodes = document.createDocumentFragment();
+            while (this.container.firstChild) {
+                this.originalNodes.appendChild(this.container.firstChild);
+            }
+            this.revertToOriginalNodes();
+        };
+        Eripusisu.prototype.refresh = function () {
             if (this.expanded) {
-                this.revertToOriginalNodes();
+                this.expand();
             }
             else {
-                this.refresh();
+                this.collapse();
             }
+        };
+        Eripusisu.prototype.toggle = function (mode) {
+            var expand = mode !== null && mode !== void 0 ? mode : !this.expanded;
+            expand ? this.expand() : this.collapse();
+        };
+        Eripusisu.prototype.expand = function () {
+            this.revertToOriginalNodes();
+            this.expanded = true;
             this.updateAttributes();
+        };
+        Eripusisu.prototype.collapse = function () {
+            this.revertToOriginalNodes();
+            this.prepareRects();
+            // showRects(this.rects);
+            this.truncate();
+            this.expanded = false;
+            this.updateAttributes();
+        };
+        Eripusisu.prototype.destroy = function () {
+            this.revertToOriginalNodes();
+            this.unbindEvents();
         };
         return Eripusisu;
     }());

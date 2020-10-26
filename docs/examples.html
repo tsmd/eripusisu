@@ -6,7 +6,7 @@
     <title>Eripusisu Examples</title>
     <style>
       body {
-        max-width: 32rem;
+        max-width: 64rem;
         margin: 2rem;
       }
       .set {
@@ -41,8 +41,38 @@
   <body>
     <h1>Eripusisu Examples</h1>
 
+    <p>
+      <button id="toggle-all" type="button">Toggle all</button>
+      <button id="expand-all" type="button">Expand all</button>
+      <button id="collapse-all" type="button">Collapse all</button>
+    </p>
+
     <h2>Long Text</h2>
     <div class="set">
+      <div class="container">
+        <p>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis tellus
+          ipsum, varius imperdiet turpis ac, pellentesque sagittis enim. Nulla
+          vulputate sem felis, vitae lobortis velit tempus at. Sed in interdum
+          ligula. In euismod quis massa nec ullamcorper. Nunc aliquam nisi a
+          rhoncus gravida. Suspendisse luctus neque in erat vestibulum tempor.
+          Nulla pharetra, ex et lacinia molestie, turpis orci euismod nibh,
+          elementum finibus diam orci nec odio. Vivamus in nunc sed nisi
+          convallis commodo. Donec magna dolor, eleifend eu laoreet a, facilisis
+          eget massa. Phasellus mollis sagittis diam ornare malesuada. Donec vel
+          enim dolor. Vestibulum a eros aliquam, facilisis enim ut, placerat
+          diam. Vestibulum orci felis, porttitor eget dignissim et, semper id
+          lorem. Vestibulum arcu erat, rhoncus suscipit lorem nec, tempus
+          feugiat nulla.
+        </p>
+      </div>
+      <p class="toggle-container">
+        <button class="toggle" type="button">Toggle</button>
+      </p>
+    </div>
+
+    <h2>Expanded by Default</h2>
+    <div class="set" data-expanded>
       <div class="container">
         <p>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis tellus
@@ -72,19 +102,22 @@
           Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis tellus
           ipsum, varius imperdiet turpis ac, pellentesque sagittis enim. Nulla
           vulputate sem felis,
-          <a href
-            >vitae lobortis velit tempus at. Sed in interdum ligula. In euismod
-            quis massa nec ullamcorper.</a
-          >
+          <a href>
+            vitae lobortis velit tempus at. Sed in interdum ligula. In euismod
+            quis massa nec ullamcorper.
+          </a>
           Nunc aliquam nisi a rhoncus gravida. Suspendisse luctus neque in erat
-          vestibulum tempor. Nulla pharetra, ex et lacinia molestie, turpis orci
-          euismod nibh, elementum finibus diam orci nec odio. Vivamus in nunc
-          sed nisi convallis commodo. Donec magna dolor, eleifend eu laoreet a,
-          facilisis eget massa. Phasellus mollis sagittis diam ornare malesuada.
-          Donec vel enim dolor. Vestibulum a eros aliquam, facilisis enim ut,
-          placerat diam. Vestibulum orci felis, porttitor eget dignissim et,
-          semper id lorem. Vestibulum arcu erat, rhoncus suscipit lorem nec,
-          tempus feugiat nulla.
+          vestibulum tempor.
+          <a href>
+            Nulla pharetra, ex et lacinia molestie, turpis orci euismod nibh,
+            elementum finibus diam orci nec odio.
+          </a>
+          Vivamus in nunc sed nisi convallis commodo. Donec magna dolor,
+          eleifend eu laoreet a, facilisis eget massa. Phasellus mollis sagittis
+          diam ornare malesuada. Donec vel enim dolor. Vestibulum a eros
+          aliquam, facilisis enim ut, placerat diam. Vestibulum orci felis,
+          porttitor eget dignissim et, semper id lorem. Vestibulum arcu erat,
+          rhoncus suscipit lorem nec, tempus feugiat nulla.
         </p>
       </div>
       <p class="toggle-container">
@@ -112,8 +145,8 @@
       <div class="container">
         <p class="float-left">
           <img
-            src="https://via.placeholder.com/100"
-            width="100"
+            src="https://via.placeholder.com/200x100"
+            width="200"
             height="100"
             alt="An image"
           />
@@ -142,8 +175,8 @@
       <div class="container">
         <p class="float-right">
           <img
-            src="https://via.placeholder.com/100"
-            width="100"
+            src="https://via.placeholder.com/200x100"
+            width="200"
             height="100"
             alt="An image"
           />
@@ -170,97 +203,43 @@
     </div>
 
     <h2>Images</h2>
-    <div class="set">
+    <div class="set" data-line="1">
       <div class="container">
         <p>
           <img
-            src="https://via.placeholder.com/100x32"
-            width="100"
-            height="32"
+            src="https://via.placeholder.com/200x64"
+            width="200"
+            height="64"
             alt="An image"
           />
           <img
-            src="https://via.placeholder.com/100x32"
-            width="100"
-            height="32"
+            src="https://via.placeholder.com/200x64"
+            width="200"
+            height="64"
             alt="An image"
           />
           <img
-            src="https://via.placeholder.com/100x32"
-            width="100"
-            height="32"
+            src="https://via.placeholder.com/200x64"
+            width="200"
+            height="64"
             alt="An image"
           />
           <img
-            src="https://via.placeholder.com/100x32"
-            width="100"
-            height="32"
+            src="https://via.placeholder.com/200x64"
+            width="200"
+            height="64"
             alt="An image"
           />
           <img
-            src="https://via.placeholder.com/100x32"
-            width="100"
-            height="32"
+            src="https://via.placeholder.com/200x64"
+            width="200"
+            height="64"
             alt="An image"
           />
           <img
-            src="https://via.placeholder.com/100x32"
-            width="100"
-            height="32"
-            alt="An image"
-          />
-          <img
-            src="https://via.placeholder.com/100x32"
-            width="100"
-            height="32"
-            alt="An image"
-          />
-          <img
-            src="https://via.placeholder.com/100x32"
-            width="100"
-            height="32"
-            alt="An image"
-          />
-          <img
-            src="https://via.placeholder.com/100x32"
-            width="100"
-            height="32"
-            alt="An image"
-          />
-          <img
-            src="https://via.placeholder.com/100x32"
-            width="100"
-            height="32"
-            alt="An image"
-          />
-          <img
-            src="https://via.placeholder.com/100x32"
-            width="100"
-            height="32"
-            alt="An image"
-          />
-          <img
-            src="https://via.placeholder.com/100x32"
-            width="100"
-            height="32"
-            alt="An image"
-          />
-          <img
-            src="https://via.placeholder.com/100x32"
-            width="100"
-            height="32"
-            alt="An image"
-          />
-          <img
-            src="https://via.placeholder.com/100x32"
-            width="100"
-            height="32"
-            alt="An image"
-          />
-          <img
-            src="https://via.placeholder.com/100x32"
-            width="100"
-            height="32"
+            src="https://via.placeholder.com/200x64"
+            width="200"
+            height="64"
             alt="An image"
           />
         </p>
@@ -274,12 +253,30 @@
     <div class="set" data-line="1">
       <div class="container">
         <ul class="inline-blocks">
-          <li>Lorem ipsum</li>
-          <li>Lorem ipsum</li>
-          <li>Lorem ipsum</li>
-          <li>Lorem ipsum</li>
-          <li>Lorem ipsum</li>
+          <li>Lorem ipsum dolor sit amet</li>
+          <li>Lorem ipsum dolor sit amet</li>
+          <li>Lorem ipsum dolor sit amet</li>
+          <li>Lorem ipsum dolor sit amet</li>
+          <li>Lorem ipsum dolor sit amet</li>
         </ul>
+      </div>
+      <p class="toggle-container">
+        <button class="toggle" type="button">Toggle</button>
+      </p>
+    </div>
+
+    <h2>RTL Support</h2>
+    <div class="set" style="direction: rtl">
+      <div class="container">
+        <p>
+          لكن لا بد أن أوضح لك أن كل هذه الأفكار المغلوطة حول استنكار النشوة
+          وتمجيد الألم نشأت بالفعل، وسأعرض لك التفاصيل لتكتشف حقيقة وأساس تلك
+          السعادة البشرية، فلا أحد يرفض أو يكره أو يتجنب الشعور بالسعادة، ولكن
+          بفضل هؤلاء الأشخاص الذين لا يدركون بأن السعادة لا بد أن نستشعرها بصورة
+          أكثر عقلانية ومنطقية فيعرضهم هذا لمواجهة الظروف الأليمة، وأكرر بأنه لا
+          يوجد من يرغب في الحب ونيل المنال ويتلذذ بالآلام، الألم هو الألم ولكن
+          نتيجة لظروف ما قد تكمن السعاده فيما نتحمله من كد وأسي.
+        </p>
       </div>
       <p class="toggle-container">
         <button class="toggle" type="button">Toggle</button>
@@ -295,9 +292,11 @@
         const eripusisues = [];
         sets.forEach(function (set) {
           const line = parseInt(set.dataset.line, 10) || 3;
+          const expanded = typeof set.dataset.expanded === "string";
           const container = set.querySelector(".container");
           const button = set.querySelector(".toggle");
           const eripusisu = new Eripusisu(container, line, {
+            expanded: expanded,
             toggleButton: button,
           });
           eripusisues.push(eripusisu);
@@ -307,6 +306,27 @@
             eripusisu.refresh();
           });
         });
+        document
+          .querySelector("#toggle-all")
+          .addEventListener("click", function () {
+            eripusisues.forEach(function (eripusisu) {
+              eripusisu.toggle();
+            });
+          });
+        document
+          .querySelector("#expand-all")
+          .addEventListener("click", function () {
+            eripusisues.forEach(function (eripusisu) {
+              eripusisu.expand();
+            });
+          });
+        document
+          .querySelector("#collapse-all")
+          .addEventListener("click", function () {
+            eripusisues.forEach(function (eripusisu) {
+              eripusisu.collapse();
+            });
+          });
       })();
     </script>
   </body>
