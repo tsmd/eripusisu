@@ -2,8 +2,25 @@
   "name": "eripusisu",
   "version": "0.0.0",
   "description": "Text truncation library",
-  "main": "dist/index.js",
-  "scripts": {},
+  "author": "Takayuki Shimada",
+  "license": "MIT",
+  "main": "dist/eripusisu.umd.js",
+  "module": "dist/eripusisu.js",
+  "scripts": {
+    "build:umd": "rollup --config rollup.config.js",
+    "build:esm": "tsc --project tsconfig.esm.json",
+    "build": "npm run-script build:umd && npm run-script build:esm"
+  },
+  "devDependencies": {
+    "@rollup/plugin-typescript": "^6.0.0",
+    "prettier": "^2.1.2",
+    "rollup": "^2.32.1",
+    "tslib": "^2.0.3",
+    "typescript": "^4.0.3"
+  },
+  "files": [
+    "dist"
+  ],
   "keywords": [
     "text",
     "truncate",
@@ -13,9 +30,4 @@
     "float",
     "inline-block"
   ],
-  "author": "Takayuki Shimada",
-  "license": "MIT",
-  "devDependencies": {
-    "prettier": "^2.1.2"
-  }
 }

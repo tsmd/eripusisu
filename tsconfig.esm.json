@@ -1,0 +1,8 @@
+{
+  "files": ["src/eripusisu.ts"],
+  "compilerOptions": {
+    "declaration": true,
+    "outDir": "dist",
+    "target": "ESNext"
+  }
+}
