@@ -9,7 +9,8 @@
   "scripts": {
     "build:umd": "rollup --config rollup.config.js",
     "build:esm": "tsc --project tsconfig.esm.json",
-    "build": "npm run-script build:umd && npm run-script build:esm"
+    "build": "npm run-script build:umd && npm run-script build:esm",
+    "prepublishOnly": "npm run-script build"
   },
   "devDependencies": {
     "@rollup/plugin-typescript": "^6.0.0",
@@ -29,5 +30,5 @@
     "range",
     "float",
     "inline-block"
-  ],
+  ]
 }
