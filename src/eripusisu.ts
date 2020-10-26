@@ -1,31 +1,51 @@
-class Eripusisu {
-  constructor(
-    container,
-    lines = 3,
-    ellipsis = "…",
-    { toggleButton = null } = {}
-  ) {
-    this.container = container;
-    this.lines = lines;
-    this.ellipsisText = ellipsis;
-    this.toggleButton = toggleButton;
+export type EripusisuOptions = {
+  ellipsisText?: string;
+  toggleButton?: HTMLElement;
+};
 
-    this.expanded = false;
-    this.isDirty = false;
+type EripusisuRect = {
+  top: number;
+  right: number;
+  bottom: number;
+  left: number;
+};
+
+type EripusisuRectWithIndex = EripusisuRect & {
+  nodeIndex: number;
+};
+
+export default class Eripusisu {
+  private originalNodes = document.createDocumentFragment();
+  private targetNodes: Node[] = [];
+  private linesMemo: number[] = [];
+  private rects: EripusisuRectWithIndex[] = [];
+  private rectsMemo: number[] = [];
+  private expanded = false;
+  private isDirty = false;
+
+  constructor(
+    private container: HTMLElement,
+    private lines = 3,
+    private options: EripusisuOptions = {}
+  ) {
+    options.ellipsisText = options.ellipsisText ?? "…";
 
     this.prepareAttributes();
     this.refresh();
   }
 
-  prepareAttributes() {
+  private prepareAttributes() {
     const randomId = "eripusisu-" + randomString();
     this.container.id = randomId;
-    this.toggleButton?.setAttribute("aria-controls", randomId);
+    this.options.toggleButton?.setAttribute("aria-controls", randomId);
     this.updateAttributes();
   }
 
-  updateAttributes() {
-    this.toggleButton?.setAttribute("aria-expanded", String(this.expanded));
+  private updateAttributes() {
+    this.options.toggleButton?.setAttribute(
+      "aria-expanded",
+      String(this.expanded)
+    );
   }
 
   refresh() {
@@ -41,29 +61,25 @@ class Eripusisu {
     this.prepareRects();
 
     if (this.linesMemo.length > this.lines) {
-      this.container.style.contain = "strict";
-      this.container.style.height = "0";
       this.truncate();
-      this.container.style.contain = "";
-      this.container.style.height = "";
     }
   }
 
-  collectTargetNodes() {
+  private collectTargetNodes() {
     return collectNodes(this.container, (node) => {
       return (
-        (node.nodeType === Node.ELEMENT_NODE &&
-          ["IMG", "PICTURE", "SVG"].includes(node.tagName)) ||
-        (node.nodeType === Node.TEXT_NODE && node.textContent.trim() !== "")
+        (node instanceof HTMLElement &&
+          ["IMG", "PICTURE", "SVG"].indexOf(node.tagName) >= 0) ||
+        (node instanceof Text && node.textContent!.trim() !== "")
       );
     });
   }
 
-  emptyTarget() {
+  private emptyTarget() {
     this.container.innerHTML = "";
   }
 
-  revertToOriginalNodes() {
+  private revertToOriginalNodes() {
     if (this.isDirty) {
       this.emptyTarget();
       this.container.appendChild(this.originalNodes.cloneNode(true));
@@ -71,7 +87,7 @@ class Eripusisu {
     }
   }
 
-  prepareRects() {
+  private prepareRects() {
     this.rects = [];
     this.rectsMemo = [0];
     this.linesMemo = [];
@@ -110,7 +126,7 @@ class Eripusisu {
     }
   }
 
-  getRectsFromRange(range, node) {
+  private getRectsFromRange(range, node) {
     const rects = [];
     const domRects = range.getClientRects();
     const nearestScrollTop = getNearestScrollTop(node);
@@ -128,7 +144,7 @@ class Eripusisu {
     return rects;
   }
 
-  isRectsWithinLines(rects, lines) {
+  private isRectsWithinLines(rects, lines) {
     let flag = true;
     new RectTraverser((rect, index, lineCount) => {
       if (lines < lineCount) {
@@ -139,13 +155,15 @@ class Eripusisu {
     return flag;
   }
 
-  truncate() {
+  private truncate() {
     this.isDirty = true;
 
     // 試行中のパフォーマンス向上
+    // @ts-ignore
     this.container.style.contain = "strict";
     this.container.style.height = "0";
     const teardown = () => {
+      // @ts-ignore
       this.container.style.contain = "";
       this.container.style.height = "";
     };
@@ -166,7 +184,7 @@ class Eripusisu {
       targetNode = this.targetNodes[targetNodeIndex];
 
       // テキストノードでなければテキスト処理ができないので、ここで終了
-      if (targetNode.nodeType !== Node.TEXT_NODE) {
+      if (!(targetNode instanceof Text)) {
         if (targetNodeIndex === this.rects[targetRectIndex].nodeIndex) {
           continue;
         } else {
@@ -181,7 +199,7 @@ class Eripusisu {
 
       const isRectsWithinLines = (textPost) => {
         targetNode.textContent =
-          targetText.slice(0, textPost) + this.ellipsisText;
+          targetText.slice(0, textPost) + this.options.ellipsisText;
 
         const range = document.createRange();
         range.setStart(targetNode, 0);
@@ -213,12 +231,12 @@ class Eripusisu {
     const resultRange = document.createRange();
     resultRange.setStartBefore(this.container.firstChild);
 
-    if (targetNode.nodeType === Node.TEXT_NODE) {
+    if (targetNode instanceof Text) {
       if (resultLength < 0) {
         return teardown();
       }
       targetNode.textContent =
-        targetText.slice(0, resultLength) + this.ellipsisText;
+        targetText.slice(0, resultLength) + this.options.ellipsisText;
       resultRange.setEnd(targetNode, targetNode.textContent.length);
     } else {
       resultRange.setEndAfter(targetNode);
@@ -244,17 +262,15 @@ class Eripusisu {
 }
 
 class RectTraverser {
+  private lineCount = 0;
+  private lastTop = -Infinity;
+  private lastRight = Infinity;
+
   /**
    * @param {Function} callback
    * @param {DOMRect[]} rects
    */
-  constructor(callback, rects = []) {
-    this.callback = callback;
-    this.rects = rects;
-    this.lineCount = 0;
-    this.lastTop = -Infinity;
-    this.lastRight = Infinity;
-
+  constructor(private callback, private rects = []) {
     for (let i = 0; i < rects.length; i += 1) {
       const rect = rects[i];
       const result = this.process(rect, i);
