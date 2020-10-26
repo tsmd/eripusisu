@@ -220,10 +220,12 @@ export default class Eripusisu {
         range.setStart(targetNode, 0);
         range.setEnd(targetNode, targetNode.textContent.length);
 
-        const testRects = [
-          ...rects,
-          ...this.getRectsFromRange(range, targetNode),
-        ];
+        const testRects = [];
+        testRects.push.apply(testRects, rects);
+        testRects.push.apply(
+          testRects,
+          this.getRectsFromRange(range, targetNode)
+        );
         return this.isRectsWithinLines(testRects, this.lines);
       };
 
