@@ -30,6 +30,8 @@ export default class Eripusisu {
   ) {
     options.ellipsisText = options.ellipsisText ?? "…";
 
+    this.handleClick = this.handleClick.bind(this);
+
     this.prepareAttributes();
     this.bindEvents();
     this.refresh();
@@ -43,10 +45,16 @@ export default class Eripusisu {
   }
 
   private bindEvents() {
-    this.options.toggleButton?.addEventListener("click", (e) => {
-      e.preventDefault();
-      this.toggle();
-    });
+    this.options.toggleButton?.addEventListener("click", this.handleClick);
+  }
+
+  private unbindEvents() {
+    this.options.toggleButton?.removeEventListener("click", this.handleClick);
+  }
+
+  private handleClick(e) {
+    e.preventDefault();
+    this.toggle();
   }
 
   private updateAttributes() {
@@ -266,6 +274,11 @@ export default class Eripusisu {
       this.refresh();
     }
     this.updateAttributes();
+  }
+
+  destroy() {
+    this.revertToOriginalNodes();
+    this.unbindEvents();
   }
 }
 
