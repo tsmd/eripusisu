@@ -2,6 +2,7 @@ export type EripusisuOptions = {
   expanded?: boolean;
   ellipsisText?: string;
   toggleButton?: HTMLElement;
+  rtl?: boolean;
 };
 
 type EripusisuRect = {
@@ -22,7 +23,6 @@ export default class Eripusisu {
   private rects: EripusisuRectWithIndex[] = [];
   private rectsMemo: number[] = [];
   private expanded = true;
-  private rtl = false;
 
   constructor(
     private container: HTMLElement,
@@ -31,8 +31,6 @@ export default class Eripusisu {
   ) {
     this.expanded = options.expanded ?? false;
     options.ellipsisText = options.ellipsisText ?? "…";
-
-    this.rtl = getComputedStyle(this.container).direction === "rtl";
 
     this.handleClick = this.handleClick.bind(this);
 
@@ -120,7 +118,7 @@ export default class Eripusisu {
         }
       },
       [],
-      this.rtl
+      this.options.rtl
     );
 
     for (let i = 0; i < this.targetNodes.length; i += 1) {
@@ -174,7 +172,7 @@ export default class Eripusisu {
         }
       },
       rects,
-      this.rtl
+      this.options.rtl
     );
     return flag;
   }
