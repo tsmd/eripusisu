@@ -1,4 +1,5 @@
 export type EripusisuOptions = {
+  expanded?: boolean;
   ellipsisText?: string;
   toggleButton?: HTMLElement;
 };
@@ -20,20 +21,22 @@ export default class Eripusisu {
   private linesMemo: number[] = [];
   private rects: EripusisuRectWithIndex[] = [];
   private rectsMemo: number[] = [];
-  private expanded = false;
-  private isDirty = false;
+  private expanded = true;
 
   constructor(
     private container: HTMLElement,
     private lines = 3,
     private options: EripusisuOptions = {}
   ) {
+    this.expanded = options.expanded ?? false;
     options.ellipsisText = options.ellipsisText ?? "…";
 
     this.handleClick = this.handleClick.bind(this);
 
     this.prepareAttributes();
     this.bindEvents();
+
+    this.rebuild();
     this.refresh();
   }
 
@@ -64,43 +67,22 @@ export default class Eripusisu {
     );
   }
 
-  refresh() {
-    this.revertToOriginalNodes();
-
-    const childNodes = this.container.childNodes;
-    this.originalNodes = document.createDocumentFragment();
-    for (let i = 0; i < childNodes.length; i += 1) {
-      this.originalNodes.appendChild(childNodes[i].cloneNode(true));
-    }
-
-    this.targetNodes = this.collectTargetNodes();
-    this.prepareRects();
-
-    if (this.linesMemo.length > this.lines) {
-      this.truncate();
-    }
+  private emptyTarget() {
+    this.container.innerHTML = "";
   }
 
-  private collectTargetNodes() {
-    return collectNodes(this.container, (node) => {
+  private revertToOriginalNodes() {
+    this.emptyTarget();
+
+    this.container.appendChild(this.originalNodes.cloneNode(true));
+
+    this.targetNodes = collectNodes(this.container, (node) => {
       return (
         (node instanceof HTMLElement &&
           ["IMG", "PICTURE", "SVG"].indexOf(node.tagName) >= 0) ||
         (node instanceof Text && node.textContent!.trim() !== "")
       );
     });
-  }
-
-  private emptyTarget() {
-    this.container.innerHTML = "";
-  }
-
-  private revertToOriginalNodes() {
-    if (this.isDirty) {
-      this.emptyTarget();
-      this.container.appendChild(this.originalNodes.cloneNode(true));
-      this.isDirty = false;
-    }
   }
 
   private prepareRects() {
@@ -172,7 +154,9 @@ export default class Eripusisu {
   }
 
   private truncate() {
-    this.isDirty = true;
+    if (this.linesMemo.length <= this.lines) {
+      return;
+    }
 
     // 試行中のパフォーマンス向上
     // @ts-ignore
@@ -266,13 +250,39 @@ export default class Eripusisu {
     teardown();
   }
 
-  toggle() {
-    this.expanded = !this.expanded;
-    if (this.expanded) {
-      this.revertToOriginalNodes();
-    } else {
-      this.refresh();
+  rebuild() {
+    this.originalNodes = document.createDocumentFragment();
+    while (this.container.firstChild) {
+      this.originalNodes.appendChild(this.container.firstChild);
     }
+    this.revertToOriginalNodes();
+  }
+
+  refresh() {
+    if (this.expanded) {
+      this.expand();
+    } else {
+      this.collapse();
+    }
+  }
+
+  toggle(mode?: boolean) {
+    const expand = mode ?? !this.expanded;
+    expand ? this.expand() : this.collapse();
+  }
+
+  expand() {
+    this.revertToOriginalNodes();
+    this.expanded = true;
+    this.updateAttributes();
+  }
+
+  collapse() {
+    this.revertToOriginalNodes();
+    this.prepareRects();
+    this.truncate();
+
+    this.expanded = false;
     this.updateAttributes();
   }
 
