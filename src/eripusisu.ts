@@ -76,6 +76,12 @@ export default class Eripusisu {
     );
   }
 
+  private dispatchToggleEvent() {
+    const event = document.createEvent("CustomEvent");
+    event.initCustomEvent("eripusisu-toggle", true, false, this.expanded);
+    this.container.dispatchEvent(event);
+  }
+
   private emptyTarget() {
     this.container.innerHTML = "";
   }
@@ -284,6 +290,7 @@ export default class Eripusisu {
     this.revertToOriginalNodes();
     this.expanded = true;
     this.updateAttributes();
+    this.dispatchToggleEvent();
   }
 
   collapse() {
@@ -293,6 +300,7 @@ export default class Eripusisu {
 
     this.expanded = false;
     this.updateAttributes();
+    this.dispatchToggleEvent();
   }
 
   destroy() {
