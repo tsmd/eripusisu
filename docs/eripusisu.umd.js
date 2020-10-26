@@ -18,8 +18,11 @@
             this.rects = [];
             this.rectsMemo = [];
             this.expanded = true;
+            this.rtl = false;
             this.expanded = (_a = options.expanded) !== null && _a !== void 0 ? _a : false;
             options.ellipsisText = (_b = options.ellipsisText) !== null && _b !== void 0 ? _b : "…";
+            this.rtl = getComputedStyle(this.container).direction === "rtl";
+            console.log(this.rtl);
             this.handleClick = this.handleClick.bind(this);
             this.prepareAttributes();
             this.bindEvents();
@@ -88,7 +91,7 @@
                 if (lineCount > _this.lines + 1) {
                     return true;
                 }
-            });
+            }, [], this.rtl);
             for (var i = 0; i < this.targetNodes.length; i += 1) {
                 var node = this.targetNodes[i];
                 var range = document.createRange();
@@ -130,7 +133,7 @@
                     flag = false;
                     return false;
                 }
-            }, rects);
+            }, rects, this.rtl);
             return flag;
         };
         Eripusisu.prototype.truncate = function () {
@@ -255,17 +258,15 @@
         return Eripusisu;
     }());
     var RectTraverser = /** @class */ (function () {
-        /**
-         * @param {Function} callback
-         * @param {DOMRect[]} rects
-         */
-        function RectTraverser(callback, rects) {
+        function RectTraverser(callback, rects, rtl) {
             if (rects === void 0) { rects = []; }
+            if (rtl === void 0) { rtl = false; }
             this.callback = callback;
             this.rects = rects;
+            this.rtl = rtl;
             this.lineCount = 0;
-            this.lastTop = -Infinity;
-            this.lastRight = Infinity;
+            this.lastBlockStart = -Infinity;
+            this.lastInlineEnd = this.rtl ? -Infinity : Infinity;
             for (var i = 0; i < rects.length; i += 1) {
                 var rect = rects[i];
                 var result = this.process(rect, i);
@@ -280,11 +281,14 @@
         };
         RectTraverser.prototype.process = function (rect, i) {
             // 改行があったとみなす条件
-            if (this.lastTop + 10 < rect.top && this.lastRight > rect.left) {
+            if (this.lastBlockStart + 10 < rect.top &&
+                (this.rtl
+                    ? this.lastInlineEnd < rect.right
+                    : this.lastInlineEnd > rect.left)) {
                 this.lineCount += 1;
             }
-            this.lastTop = rect.top;
-            this.lastRight = rect.right;
+            this.lastBlockStart = rect.top;
+            this.lastInlineEnd = this.rtl ? rect.left : rect.right;
             return this.callback(rect, i, this.lineCount);
         };
         return RectTraverser;
