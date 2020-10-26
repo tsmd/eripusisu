@@ -31,6 +31,7 @@ export default class Eripusisu {
     options.ellipsisText = options.ellipsisText ?? "…";
 
     this.prepareAttributes();
+    this.bindEvents();
     this.refresh();
   }
 
@@ -39,6 +40,13 @@ export default class Eripusisu {
     this.container.id = randomId;
     this.options.toggleButton?.setAttribute("aria-controls", randomId);
     this.updateAttributes();
+  }
+
+  private bindEvents() {
+    this.options.toggleButton?.addEventListener("click", (e) => {
+      e.preventDefault();
+      this.toggle();
+    });
   }
 
   private updateAttributes() {
