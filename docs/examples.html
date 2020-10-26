@@ -24,8 +24,19 @@
         margin-top: 0;
         margin-left: 1rem;
       }
+      .inline-blocks {
+        margin-top: 0.5em;
+        margin-left: -0.5em;
+        padding-left: 0;
+      }
+      .inline-blocks li {
+        display: inline-block;
+        margin-top: 0.5em;
+        margin-left: 0.5em;
+        padding: 0.25em;
+        border: 1px solid;
+      }
     </style>
-    <script src="./eripusisu.js"></script>
   </head>
   <body>
     <h1>Eripusisu Examples</h1>
@@ -259,18 +270,44 @@
       </p>
     </div>
 
-    <script src="https://unpkg.com/underscore@1.11.0/underscore.js"></script>
+    <h2>Inline Blocks</h2>
+    <div class="set" data-line="1">
+      <div class="container">
+        <ul class="inline-blocks">
+          <li>Lorem ipsum</li>
+          <li>Lorem ipsum</li>
+          <li>Lorem ipsum</li>
+          <li>Lorem ipsum</li>
+          <li>Lorem ipsum</li>
+        </ul>
+      </div>
+      <p class="toggle-container">
+        <button class="toggle" type="button">Toggle</button>
+      </p>
+    </div>
+
+    <script src="./eripusisu.umd.js"></script>
     <script>
       (function () {
-        const sets = document.querySelectorAll(".set");
-        _.each(sets, function (set) {
+        const sets = Array.prototype.slice.call(
+          document.querySelectorAll(".set")
+        );
+        const eripusisues = [];
+        sets.forEach(function (set) {
+          const line = parseInt(set.dataset.line, 10) || 3;
           const container = set.querySelector(".container");
           const button = set.querySelector(".toggle");
-          const eripusisu = new Eripusisu(container, 3, "…", {
+          const eripusisu = new Eripusisu(container, line, {
             toggleButton: button,
           });
           button.addEventListener("click", function () {
             eripusisu.toggle();
+          });
+          eripusisues.push(eripusisu);
+        });
+        window.addEventListener("resize", function () {
+          eripusisues.forEach(function (eripusisu) {
+            eripusisu.refresh();
           });
         });
       })();
