@@ -61,6 +61,15 @@ export default class Eripusisu {
   }
 
   private updateAttributes() {
+    const attrToAdd = this.expanded
+      ? "eripusisu-expanded"
+      : "eripusisu-collapsed";
+    const attrToRemove = this.expanded
+      ? "eripusisu-collapsed"
+      : "eripusisu-expanded";
+    this.container.setAttribute(attrToAdd, "");
+    this.container.removeAttribute(attrToRemove);
+
     this.options.toggleButton?.setAttribute(
       "aria-expanded",
       String(this.expanded)
