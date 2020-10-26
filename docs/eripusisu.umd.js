@@ -70,7 +70,20 @@
         };
         Eripusisu.prototype.updateAttributes = function () {
             var _a;
+            var attrToAdd = this.expanded
+                ? "eripusisu-expanded"
+                : "eripusisu-collapsed";
+            var attrToRemove = this.expanded
+                ? "eripusisu-collapsed"
+                : "eripusisu-expanded";
+            this.container.setAttribute(attrToAdd, "");
+            this.container.removeAttribute(attrToRemove);
             (_a = this.options.toggleButton) === null || _a === void 0 ? void 0 : _a.setAttribute("aria-expanded", String(this.expanded));
+        };
+        Eripusisu.prototype.dispatchToggleEvent = function () {
+            var event = document.createEvent("CustomEvent");
+            event.initCustomEvent("eripusisu-toggle", true, false, this.expanded);
+            this.container.dispatchEvent(event);
         };
         Eripusisu.prototype.emptyTarget = function () {
             this.container.innerHTML = "";
@@ -246,14 +259,15 @@
             this.revertToOriginalNodes();
             this.expanded = true;
             this.updateAttributes();
+            this.dispatchToggleEvent();
         };
         Eripusisu.prototype.collapse = function () {
             this.revertToOriginalNodes();
             this.prepareRects();
-            // showRects(this.rects);
             this.truncate();
             this.expanded = false;
             this.updateAttributes();
+            this.dispatchToggleEvent();
         };
         Eripusisu.prototype.destroy = function () {
             this.revertToOriginalNodes();
