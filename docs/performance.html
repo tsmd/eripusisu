@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Performance</title>
+    <style>
+      body {
+        max-width: 64rem;
+        margin: 2rem;
+        font-family: sans-serif;
+      }
+      .set {
+        margin-top: 1rem;
+        padding: 0 1rem;
+        border: 1px solid;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Performance</h1>
+
+    <h2>Links</h2>
+    <div class="set">
+      <div class="test1">
+        <p>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis tellus
+          ipsum, varius imperdiet turpis ac, pellentesque sagittis enim. Nulla
+          vulputate sem felis,
+          <a href>
+            vitae lobortis velit tempus at. Sed in interdum ligula. In euismod
+            quis massa nec ullamcorper.
+          </a>
+          Nunc aliquam nisi a rhoncus gravida. Suspendisse luctus neque in erat
+          vestibulum tempor.
+          <a href>
+            Nulla pharetra, ex et lacinia molestie, turpis orci euismod nibh,
+            elementum finibus diam orci nec odio.
+          </a>
+          Vivamus in nunc sed nisi convallis commodo. Donec magna dolor,
+          eleifend eu laoreet a, facilisis eget massa. Phasellus mollis sagittis
+          diam ornare malesuada. Donec vel enim dolor. Vestibulum a eros
+          aliquam, facilisis enim ut, placerat diam. Vestibulum orci felis,
+          porttitor eget dignissim et, semper id lorem. Vestibulum arcu erat,
+          rhoncus suscipit lorem nec, tempus feugiat nulla.
+        </p>
+      </div>
+    </div>
+
+    <h2>Links</h2>
+    <div class="set">
+      <div class="test2">
+        <p>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis tellus
+          ipsum, varius imperdiet turpis ac, pellentesque sagittis enim. Nulla
+          vulputate sem felis,
+          <a href>
+            vitae lobortis velit tempus at. Sed in interdum ligula. In euismod
+            quis massa nec ullamcorper.
+          </a>
+          Nunc aliquam nisi a rhoncus gravida. Suspendisse luctus neque in erat
+          vestibulum tempor.
+          <a href>
+            Nulla pharetra, ex et lacinia molestie, turpis orci euismod nibh,
+            elementum finibus diam orci nec odio.
+          </a>
+          Vivamus in nunc sed nisi convallis commodo. Donec magna dolor,
+          eleifend eu laoreet a, facilisis eget massa. Phasellus mollis sagittis
+          diam ornare malesuada. Donec vel enim dolor. Vestibulum a eros
+          aliquam, facilisis enim ut, placerat diam. Vestibulum orci felis,
+          porttitor eget dignissim et, semper id lorem. Vestibulum arcu erat,
+          rhoncus suscipit lorem nec, tempus feugiat nulla.
+        </p>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/line-truncation@1.3.9/dist/bundle.js"></script>
+    <script src="https://unpkg.com/eripusisu@1.2.0/dist/eripusisu.umd.js"></script>
+    <script>
+      (function () {
+        var times = 1000;
+        var fragment, i, start;
+
+        var test1 = document.querySelector(".test1");
+        fragment = document.createDocumentFragment();
+        for (i = 0; i < times; i += 1) {
+          fragment.appendChild(test1.cloneNode(true));
+        }
+        test1.parentElement.insertBefore(fragment, test1);
+
+        start = performance.now();
+        document.querySelectorAll(".test1").forEach(function (el) {
+          LineTruncation.truncate(el, 3);
+        });
+        console.log("LineTruncation", performance.now() - start);
+
+        var test2 = document.querySelector(".test2");
+        fragment = document.createDocumentFragment();
+        for (i = 0; i < times; i += 1) {
+          fragment.appendChild(test2.cloneNode(true));
+        }
+        test2.parentElement.insertBefore(fragment, test2);
+
+        start = performance.now();
+        document.querySelectorAll(".test2").forEach(function (el) {
+          new Eripusisu(el, 3);
+        });
+        console.log("Eripusisu", performance.now() - start);
+      })();
+    </script>
+  </body>
+</html>
