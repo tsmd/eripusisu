@@ -21,7 +21,7 @@ Text truncation library.
 ### script 要素で読み込む
 
 ```html
-<script src="https://unpkg.com/eripusisu@1.1.2/dist/eripusisu.umd.js"></script>
+<script src="https://unpkg.com/eripusisu@1.2.1/dist/eripusisu.umd.js"></script>
 ```
 
 ### npm パッケージを利用する
