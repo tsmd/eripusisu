@@ -84,7 +84,9 @@ export default class Eripusisu {
   }
 
   private emptyTarget() {
-    this.container.innerHTML = "";
+    while (this.container.firstChild) {
+      this.container.removeChild(this.container.firstChild);
+    }
   }
 
   private revertToOriginalNodes() {
