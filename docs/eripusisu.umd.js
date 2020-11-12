@@ -18,11 +18,8 @@
             this.rects = [];
             this.rectsMemo = [];
             this.expanded = true;
-            this.rtl = false;
             this.expanded = (_a = options.expanded) !== null && _a !== void 0 ? _a : false;
             options.ellipsisText = (_b = options.ellipsisText) !== null && _b !== void 0 ? _b : "…";
-            this.rtl = getComputedStyle(this.container).direction === "rtl";
-            console.log(this.rtl);
             this.handleClick = this.handleClick.bind(this);
             this.prepareAttributes();
             this.bindEvents();
@@ -66,7 +63,9 @@
             this.container.dispatchEvent(event);
         };
         Eripusisu.prototype.emptyTarget = function () {
-            this.container.innerHTML = "";
+            while (this.container.firstChild) {
+                this.container.removeChild(this.container.firstChild);
+            }
         };
         Eripusisu.prototype.revertToOriginalNodes = function () {
             this.emptyTarget();
@@ -91,7 +90,7 @@
                 if (lineCount > _this.lines + 1) {
                     return true;
                 }
-            }, [], this.rtl);
+            }, [], this.options.rtl);
             for (var i = 0; i < this.targetNodes.length; i += 1) {
                 var node = this.targetNodes[i];
                 var range = document.createRange();
@@ -133,14 +132,11 @@
                     flag = false;
                     return false;
                 }
-            }, rects, this.rtl);
+            }, rects, this.options.rtl);
             return flag;
         };
         Eripusisu.prototype.truncate = function () {
             var _this = this;
-            if (this.linesMemo.length <= this.lines) {
-                return;
-            }
             // 試行中のパフォーマンス向上
             // @ts-ignore
             this.container.style.contain = "strict";
@@ -218,6 +214,13 @@
             this.container.appendChild(resultContents);
             teardown();
         };
+        Object.defineProperty(Eripusisu.prototype, "visuallyCollapsed", {
+            get: function () {
+                return this.expanded ? false : this.linesMemo.length > this.lines;
+            },
+            enumerable: false,
+            configurable: true
+        });
         Eripusisu.prototype.rebuild = function () {
             this.originalNodes = document.createDocumentFragment();
             while (this.container.firstChild) {
@@ -226,12 +229,14 @@
             this.revertToOriginalNodes();
         };
         Eripusisu.prototype.refresh = function () {
-            if (this.expanded) {
-                this.expand();
+            this.revertToOriginalNodes();
+            if (!this.expanded) {
+                this.prepareRects();
+                if (this.visuallyCollapsed) {
+                    this.truncate();
+                }
             }
-            else {
-                this.collapse();
-            }
+            this.updateAttributes();
         };
         Eripusisu.prototype.toggle = function (mode) {
             var expand = mode !== null && mode !== void 0 ? mode : !this.expanded;
@@ -246,8 +251,10 @@
         Eripusisu.prototype.collapse = function () {
             this.revertToOriginalNodes();
             this.prepareRects();
-            this.truncate();
             this.expanded = false;
+            if (this.visuallyCollapsed) {
+                this.truncate();
+            }
             this.updateAttributes();
             this.dispatchToggleEvent();
         };
