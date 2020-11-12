@@ -22,7 +22,8 @@ export default class Eripusisu {
   private linesMemo: number[] = [];
   private rects: EripusisuRectWithIndex[] = [];
   private rectsMemo: number[] = [];
-  private expanded = true;
+
+  expanded = true;
 
   constructor(
     private container: HTMLElement,
@@ -180,10 +181,6 @@ export default class Eripusisu {
   }
 
   private truncate() {
-    if (this.linesMemo.length <= this.lines) {
-      return;
-    }
-
     // 試行中のパフォーマンス向上
     // @ts-ignore
     this.container.style.contain = "strict";
@@ -278,6 +275,10 @@ export default class Eripusisu {
     teardown();
   }
 
+  get visuallyCollapsed() {
+    return this.expanded ? false : this.linesMemo.length > this.lines;
+  }
+
   rebuild() {
     this.originalNodes = document.createDocumentFragment();
     while (this.container.firstChild) {
@@ -287,11 +288,14 @@ export default class Eripusisu {
   }
 
   refresh() {
-    if (this.expanded) {
-      this.expand();
-    } else {
-      this.collapse();
+    this.revertToOriginalNodes();
+    if (!this.expanded) {
+      this.prepareRects();
+      if (this.visuallyCollapsed) {
+        this.truncate();
+      }
     }
+    this.updateAttributes();
   }
 
   toggle(mode?: boolean) {
@@ -309,9 +313,10 @@ export default class Eripusisu {
   collapse() {
     this.revertToOriginalNodes();
     this.prepareRects();
-    this.truncate();
-
     this.expanded = false;
+    if (this.visuallyCollapsed) {
+      this.truncate();
+    }
     this.updateAttributes();
     this.dispatchToggleEvent();
   }
