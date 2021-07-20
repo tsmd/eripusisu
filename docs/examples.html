@@ -37,6 +37,18 @@
         padding: 0.25em;
         border: 1px solid;
       }
+      .table {
+        width: 100%;
+        margin-top: 1em;
+        margin-bottom: 1em;
+        border-collapse: collapse;
+        table-layout: fixed;
+      }
+      .table th,
+      .table td {
+        padding: 0.5em;
+        border: 1px solid;
+      }
     </style>
   </head>
   <body>
@@ -244,6 +256,47 @@
             alt="An image"
           />
         </p>
+      </div>
+      <p>
+        <button class="toggle" type="button">Toggle</button>
+      </p>
+    </div>
+
+    <h2>Tables</h2>
+    <div class="set" data-line="3">
+      <div class="container">
+        <table class="table">
+          <colgroup>
+            <col style="width: 20%" />
+          </colgroup>
+          <thead>
+            <tr>
+              <th scope="col">Lorem ipsum</th>
+              <th scope="col">dolor sit amet,</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1</td>
+              <td>
+                consectetur adipiscing elit. Duis tellus ipsum, varius imperdiet
+                turpis ac, pellentesque sagittis enim.
+              </td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td>
+                Nulla vulputate sem felis, vitae lobortis velit tempus at.
+                Sed in interdum ligula.
+                In euismod quis massa nec ullamcorper.
+              </td>
+            </tr>
+            <tr>
+              <td>3</td>
+              <td>Nunc aliquam nisi a rhoncus gravida.</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
       <p>
         <button class="toggle" type="button">Toggle</button>
