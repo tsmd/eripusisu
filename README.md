@@ -27,7 +27,7 @@ Text truncation library.
 ### npm パッケージを利用する
 
 ```
-npm install --save Eripusisu
+npm install --save eripusisu
 ```
 
 ```js
