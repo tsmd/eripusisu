@@ -19,11 +19,11 @@
     "prepublishOnly": "npm run-script build"
   },
   "devDependencies": {
-    "@rollup/plugin-typescript": "^6.0.0",
-    "prettier": "^2.1.2",
-    "rollup": "^2.32.1",
-    "tslib": "^2.0.3",
-    "typescript": "^4.0.3"
+    "@rollup/plugin-typescript": "^8.3.0",
+    "prettier": "^2.5.1",
+    "rollup": "^2.64.0",
+    "tslib": "^2.3.1",
+    "typescript": "^4.5.4"
   },
   "keywords": [
     "text",
