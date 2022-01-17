@@ -28,7 +28,7 @@ export default class Eripusisu {
   constructor(
     private container: HTMLElement,
     private lines = 3,
-    private options: EripusisuOptions = {}
+    public options: EripusisuOptions = {}
   ) {
     this.expanded = options.expanded ?? false;
     options.ellipsisText = options.ellipsisText ?? "…";
@@ -276,7 +276,11 @@ export default class Eripusisu {
   }
 
   get visuallyCollapsed() {
-    return this.expanded ? false : this.linesMemo.length > this.lines;
+    return this.expanded ? false : this.needsCollapse;
+  }
+
+  get needsCollapse() {
+    return this.linesMemo.length > this.lines;
   }
 
   rebuild() {
