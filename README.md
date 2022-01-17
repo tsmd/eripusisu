@@ -21,7 +21,7 @@ Text truncation library.
 ### script 要素で読み込む
 
 ```html
-<script src="https://unpkg.com/eripusisu@1.2.1/dist/eripusisu.umd.js"></script>
+<script src="https://unpkg.com/eripusisu@1.3.1/dist/eripusisu.umd.js"></script>
 ```
 
 ### npm パッケージを利用する
@@ -165,6 +165,13 @@ new Eripusisu(container, lines, options);
 | `collapse` | 閉じます。すでに閉じている場合、何もしません。                                                                    |
 | `refresh`  | 画面表示にあわせて省略位置を算出しなおします。画面や要素の大きさが変わったら `refresh` を呼び出す必要があります。 |
 | `rebuild`  | DOM の変化には自動的に追随しません。コンテナーに含まれる要素が変わったら `rebuild` を呼び出す必要があります。     |
+
+### プロパティ
+
+| プロパティ名              | 説明                                                |
+|---------------------|---------------------------------------------------|
+| `visuallyCollapsed` | 閉じているかどうかを表します。コンテンツが少なく閉じる必要がない場合は `false` を返します。 |
+| `needsCollapse`     | コンテンツを閉じる必要があるかどうかを返します。コンテンツ量に応じて変動します。          |
 
 ## イベント
 
