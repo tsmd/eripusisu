@@ -15,6 +15,9 @@
         padding: 0 1rem;
         border: 1px solid;
       }
+      .rtl {
+        direction: rtl;
+      }
       .float-left {
         float: left;
         margin-top: 0;
@@ -286,9 +289,8 @@
             <tr>
               <td>2</td>
               <td>
-                Nulla vulputate sem felis, vitae lobortis velit tempus at.
-                Sed in interdum ligula.
-                In euismod quis massa nec ullamcorper.
+                Nulla vulputate sem felis, vitae lobortis velit tempus at. Sed
+                in interdum ligula. In euismod quis massa nec ullamcorper.
               </td>
             </tr>
             <tr>
@@ -320,7 +322,7 @@
     </div>
 
     <h2>RTL Support</h2>
-    <div class="set" style="direction: rtl">
+    <div class="set rtl">
       <div class="container">
         <p>
           لكن لا بد أن أوضح لك أن كل هذه الأفكار المغلوطة حول استنكار النشوة
@@ -355,9 +357,11 @@
           const expanded = typeof set.dataset.expanded === "string";
           const container = set.querySelector(".container");
           const button = set.querySelector(".toggle");
+          const rtl = set.matches(".rtl");
           const eripusisu = new Eripusisu(container, line, {
             expanded: expanded,
             toggleButton: button,
+            rtl: rtl,
           });
           eripusisues.push(eripusisu);
           set.addEventListener("eripusisu-toggle", function (e) {

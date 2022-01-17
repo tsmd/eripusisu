@@ -334,13 +334,16 @@ export default class Eripusisu {
 class RectTraverser {
   private lineCount = 0;
   private lastBlockStart = -Infinity;
-  private lastInlineEnd = this.rtl ? -Infinity : Infinity;
+  private lastInlineEnd = Infinity;
 
   constructor(
     private callback: Function,
     private rects: EripusisuRect[] = [],
     private rtl = false
   ) {
+    if (this.rtl) {
+      this.lastInlineEnd = -Infinity;
+    }
     for (let i = 0; i < rects.length; i += 1) {
       const rect = rects[i];
       const result = this.process(rect, i);

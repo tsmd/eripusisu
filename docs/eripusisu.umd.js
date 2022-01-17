@@ -2,7 +2,7 @@
     typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
     typeof define === 'function' && define.amd ? define(factory) :
     (global = typeof globalThis !== 'undefined' ? globalThis : global || self, global.Eripusisu = factory());
-}(this, (function () { 'use strict';
+})(this, (function () { 'use strict';
 
     var Eripusisu = /** @class */ (function () {
         function Eripusisu(container, lines, options) {
@@ -216,7 +216,14 @@
         };
         Object.defineProperty(Eripusisu.prototype, "visuallyCollapsed", {
             get: function () {
-                return this.expanded ? false : this.linesMemo.length > this.lines;
+                return this.expanded ? false : this.needsCollapse;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Object.defineProperty(Eripusisu.prototype, "needsCollapse", {
+            get: function () {
+                return this.linesMemo.length > this.lines;
             },
             enumerable: false,
             configurable: true
@@ -273,7 +280,10 @@
             this.rtl = rtl;
             this.lineCount = 0;
             this.lastBlockStart = -Infinity;
-            this.lastInlineEnd = this.rtl ? -Infinity : Infinity;
+            this.lastInlineEnd = Infinity;
+            if (this.rtl) {
+                this.lastInlineEnd = -Infinity;
+            }
             for (var i = 0; i < rects.length; i += 1) {
                 var rect = rects[i];
                 var result = this.process(rect, i);
@@ -344,4 +354,4 @@
 
     return Eripusisu;
 
-})));
+}));
